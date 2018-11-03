@@ -25,8 +25,7 @@ import static android.opengl.GLES20.glValidateProgram;
  * Created by guohongbin on 2018/10/28.
  */
 public class ShaderHelper {
-    public static final String TAG = ShaderHelper.class.getName();
-
+    private static final String TAG = "ShaderHelper";
 
     /**
      * Loads and compiles a vertex shader, returning the OpenGL object ID.
@@ -46,26 +45,32 @@ public class ShaderHelper {
      * Compiles a shader, returning the OpenGL object ID.
      */
     private static int compileShader(int type, String shaderCode) {
+        // Create a new shader object.
         final int shaderObjectId = glCreateShader(type);
+
         if (shaderObjectId == 0) {
             if (LoggerConfig.ON) {
-                Log.w(TAG, "Could not create new shader");
+                Log.w(TAG, "Could not create new shader.");
             }
+
             return 0;
         }
 
+        // Pass in the shader source.
         glShaderSource(shaderObjectId, shaderCode);
 
+        // Compile the shader.
         glCompileShader(shaderObjectId);
 
+        // Get the compilation status.
         final int[] compileStatus = new int[1];
-        glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS, compileStatus, 0);
+        glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS,
+                compileStatus, 0);
 
         if (LoggerConfig.ON) {
             // Print the shader info log to the Android log output.
-            Log.v(TAG, "Results of compiling source:"
-                    + "\n" + shaderCode + "\n:"
-                    + glGetShaderInfoLog(shaderObjectId));
+            Log.v(TAG, "Results of compiling source:" + "\n" + shaderCode
+                    + "\n:" + glGetShaderInfoLog(shaderObjectId));
         }
 
         // Verify the compile status.
@@ -76,6 +81,7 @@ public class ShaderHelper {
             if (LoggerConfig.ON) {
                 Log.w(TAG, "Compilation of shader failed.");
             }
+
             return 0;
         }
 
@@ -88,6 +94,7 @@ public class ShaderHelper {
      * program. Returns the OpenGL program object ID, or 0 if linking failed.
      */
     public static int linkProgram(int vertexShaderId, int fragmentShaderId) {
+
         // Create a new program object.
         final int programObjectId = glCreateProgram();
 
@@ -110,12 +117,13 @@ public class ShaderHelper {
 
         // Get the link status.
         final int[] linkStatus = new int[1];
-        glGetProgramiv(programObjectId, GL_LINK_STATUS, linkStatus, 0);
+        glGetProgramiv(programObjectId, GL_LINK_STATUS,
+                linkStatus, 0);
 
         if (LoggerConfig.ON) {
             // Print the program info log to the Android log output.
-            Log.v(TAG, "Results of linking program:\n"
-                    + glGetProgramInfoLog(programObjectId));
+            Log.v(TAG,"Results of linking program:\n"
+                            + glGetProgramInfoLog(programObjectId));
         }
 
         // Verify the link status.
@@ -140,7 +148,6 @@ public class ShaderHelper {
      */
     public static boolean validateProgram(int programObjectId) {
         glValidateProgram(programObjectId);
-
         final int[] validateStatus = new int[1];
         glGetProgramiv(programObjectId, GL_VALIDATE_STATUS,
                 validateStatus, 0);
@@ -148,5 +155,27 @@ public class ShaderHelper {
                 + "\nLog:" + glGetProgramInfoLog(programObjectId));
 
         return validateStatus[0] != 0;
+    }
+
+    /**
+     * Helper function that compiles the shaders, links and validates the
+     * program, returning the program ID.
+     */
+    public static int buildProgram(String vertexShaderSource,
+                                   String fragmentShaderSource) {
+        int program;
+
+        // Compile the shaders.
+        int vertexShader = compileVertexShader(vertexShaderSource);
+        int fragmentShader = compileFragmentShader(fragmentShaderSource);
+
+        // Link them into a shader program.
+        program = linkProgram(vertexShader, fragmentShader);
+
+        if (LoggerConfig.ON) {
+            validateProgram(program);
+        }
+
+        return program;
     }
 }
