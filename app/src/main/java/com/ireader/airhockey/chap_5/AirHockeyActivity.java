@@ -1,4 +1,4 @@
-package com.ireader.airhockey.chap_1;
+package com.ireader.airhockey.chap_5;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.widget.Toast;
 
-public class FirstOpenGLProjectActivity extends Activity {
+public class AirHockeyActivity extends Activity {
 
     private GLSurfaceView glSurfaceView;
     private boolean rendererSet = false;
@@ -44,7 +44,9 @@ public class FirstOpenGLProjectActivity extends Activity {
         if (supportsEs2) {
             // Request an OpenGL ES 2.0 compatible context.
             glSurfaceView.setEGLContextClientVersion(2);
-            glSurfaceView.setRenderer(new FirstOpenGLProjectRenderer());
+
+            // Assign our renderer.
+            glSurfaceView.setRenderer(new AirHockeyRenderer(this));
             rendererSet = true;
         } else {
             /*

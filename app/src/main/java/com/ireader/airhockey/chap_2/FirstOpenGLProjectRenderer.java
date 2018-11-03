@@ -1,4 +1,4 @@
-package com.ireader.airhockey.chap_1;
+package com.ireader.airhockey.chap_2;
 
 import android.opengl.GLSurfaceView;
 
