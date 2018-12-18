@@ -23,8 +23,8 @@ public class VertexArray {
                 .put(vertexData);
     }
 
-    public void setVertexAttribPoninter(int dataOffset, int attributeLocation,
-                                        int componentCount, int stride) {
+    public void setVertexAttribPointer(int dataOffset, int attributeLocation,
+                                       int componentCount, int stride) {
         floatBuffer.position(dataOffset);
 
         glVertexAttribPointer(attributeLocation,
@@ -36,6 +36,12 @@ public class VertexArray {
 
         glEnableVertexAttribArray(attributeLocation);
 
+        floatBuffer.position(0);
+    }
+
+    public void updateBuffer(float[] vertextData, int start, int count) {
+        floatBuffer.position(start);
+        floatBuffer.put(vertextData, start, count);
         floatBuffer.position(0);
     }
 

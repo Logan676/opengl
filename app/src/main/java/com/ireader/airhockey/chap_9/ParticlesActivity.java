@@ -8,13 +8,12 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
-
-public class AirHockeyActivity extends Activity {
+/**
+ * Created by guohongbin on 2018/12/18.
+ */
+public class ParticlesActivity extends Activity {
 
     private GLSurfaceView glSurfaceView;
     private boolean rendererSet = false;
@@ -22,16 +21,11 @@ public class AirHockeyActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         glSurfaceView = new GLSurfaceView(this);
-
-
         ActivityManager activityManager =
                 (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         ConfigurationInfo configurationInfo =
                 activityManager.getDeviceConfigurationInfo();
-
-
         /*
          * final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
          */
@@ -49,14 +43,12 @@ public class AirHockeyActivity extends Activity {
                         || Build.MODEL.contains("Emulator")
                         || Build.MODEL.contains("Android SDK built for x86")));
 
-        final AirHockeyRenderer airHockeyRenderer = new AirHockeyRenderer(this);
-
         if (supportsEs2) {
             // Request an OpenGL ES 2.0 compatible context.
             glSurfaceView.setEGLContextClientVersion(2);
 
             // Assign our renderer.
-            glSurfaceView.setRenderer(airHockeyRenderer);
+            glSurfaceView.setRenderer(new ParticlesRenderer(this));
             rendererSet = true;
         } else {
             /*
@@ -76,40 +68,6 @@ public class AirHockeyActivity extends Activity {
                     Toast.LENGTH_LONG).show();
             return;
         }
-
-        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event != null) {
-                    // Covert touch coordinates into normalized device coordinates,
-                    // Keep in mind that Android`s Y coordinates are inverted.
-
-                    final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
-                    final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2 - 1);
-
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        glSurfaceView.queueEvent(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d("LM", "ACTION_DOWN normalizedX=" + normalizedX + ", normalizedY=" + normalizedY);
-                                airHockeyRenderer.handleTouchPress(normalizedX, normalizedY);
-                            }
-                        });
-                    } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                        glSurfaceView.queueEvent(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d("LM", "ACTION_MOVE normalizedX=" + normalizedX + ", normalizedY=" + normalizedY);
-                                airHockeyRenderer.handleTouchDrag(normalizedX, normalizedY);
-                            }
-                        });
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
 
         setContentView(glSurfaceView);
     }

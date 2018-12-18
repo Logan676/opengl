@@ -37,12 +37,12 @@ public class Table {
     }
 
     public void bindData(TextureShaderProgram textureShaderProgram) {
-        vertexArray.setVertexAttribPoninter(0,
+        vertexArray.setVertexAttribPointer(0,
                 textureShaderProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        vertexArray.setVertexAttribPoninter(POSITION_COMPONENT_COUNT,
+        vertexArray.setVertexAttribPointer(POSITION_COMPONENT_COUNT,
                 textureShaderProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATE_COMPONENT_COUNT,
                 STRIDE);

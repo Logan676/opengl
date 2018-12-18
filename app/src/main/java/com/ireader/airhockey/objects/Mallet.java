@@ -31,12 +31,12 @@ public class Mallet {
     }
 
     public void bindData(ColorShaderProgram colorShaderProgram) {
-        mVertexArray.setVertexAttribPoninter(0,
+        mVertexArray.setVertexAttribPointer(0,
                 colorShaderProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
-        mVertexArray.setVertexAttribPoninter(POSITION_COMPONENT_COUNT,
+        mVertexArray.setVertexAttribPointer(POSITION_COMPONENT_COUNT,
                 colorShaderProgram.getColorAttributeLocation(),
                 COLOR_COMPONENT_COUNT,
                 STRIDE);
